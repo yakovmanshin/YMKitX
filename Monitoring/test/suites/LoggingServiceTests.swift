@@ -11,7 +11,7 @@
 import OSLog
 import XCTest
 
-@available(iOS 15, macOS 10.15, *)
+@available(iOS 15, *)
 final class LoggingServiceTests: XCTestCase {
     
     private var service: LoggingService!

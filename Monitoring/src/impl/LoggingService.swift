@@ -65,7 +65,7 @@ extension LoggingService: LoggingServiceProtocol {
             return OSLogWrapper(log: log)
         }
         #else
-        debugPrint("No logger implementation is available on this platform")
+        return StandardOutputWrapper()
         #endif
     }
     
@@ -126,6 +126,26 @@ final private class OSLogWrapper: LoggerImplementationWrapper {
     
     func logError(_ message: String) {
         os_log(.error, log: log, "Error: %{public}@", message)
+    }
+    
+}
+
+ #else
+
+// MARK: - StandardOutputWrapper
+
+final private class StandardOutputWrapper: LoggerImplementationWrapper {
+    
+    func log(_ message: String) {
+        print(message)
+    }
+    
+    func logError(_ error: any Error) {
+        print("Error: \(error.localizedDescription)")
+    }
+    
+    func logError(_ message: String) {
+        print("Error: \(message)")
     }
     
 }

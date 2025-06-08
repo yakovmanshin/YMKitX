@@ -37,3 +37,14 @@ jobs:
           -scheme YMKitX-Package \
           -destination "${{ matrix.DESTINATION }}" \
           | xcpretty && exit ${PIPESTATUS[0]}
+  spm_tests_swift:
+    name: SPM Tests (Swift)
+    runs-on: ${{ matrix.OS }}
+    strategy:
+      matrix:
+        OS: [macos-15, ubuntu-24.04]
+    steps:
+      - name: Check Out Repository
+        uses: actions/checkout@v4
+      - name: Run Tests
+        run: swift test

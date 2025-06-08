@@ -14,6 +14,10 @@ let package = Package(
             targets: ["YMKitX"],
         ),
         .library(
+            name: "YMMonitoring",
+            targets: ["YMMonitoring"],
+        ),
+        .library(
             name: "YMValidationKit",
             targets: ["YMAppValidation"],
         ),
@@ -46,6 +50,15 @@ let package = Package(
             name: "YMKitXTests",
             dependencies: ["YMKitX"],
             path: "Kit/test",
+        ),
+        .target(
+            name: "YMMonitoring",
+            path: "Monitoring/src",
+        ),
+        .testTarget(
+            name: "YMMonitoringTests",
+            dependencies: ["YMMonitoring"],
+            path: "Monitoring/test",
         ),
     ]
 )

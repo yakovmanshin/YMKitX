@@ -1,0 +1,39 @@
+name: YMKitX Checks
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+    tags:
+      - "**"
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }} / ${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  spm_tests_xcode:
+    name: SPM Tests (Xcode ${{ matrix.XCODE_VERSION }})
+    runs-on: ${{ matrix.OS }}
+    strategy:
+      matrix:
+        XCODE_VERSION: ["16.3"]
+        include:
+          - XCODE_VERSION: "16.3"
+            OS: macos-15
+            DESTINATION: "platform=iOS Simulator,name=iPhone 16 Pro Max,OS=18.4"
+    steps:
+      - name: Check Out Repository
+        uses: actions/checkout@v4
+      - name: Select Xcode Version
+        run: sudo xcode-select -switch "/Applications/Xcode_${{ matrix.XCODE_VERSION }}.app"
+      - name: Run Tests
+        run: |
+          xcodebuild \
+          clean \
+          test \
+          -showBuildTimingSummary \
+          -scheme YMKitX-Package \
+          -destination "${{ matrix.DESTINATION }}" \
+          | xcpretty && exit ${PIPESTATUS[0]}

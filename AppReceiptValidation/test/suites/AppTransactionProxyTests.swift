@@ -3,7 +3,7 @@
 //  YMAppReceiptValidationTests
 //
 //  Created by Yakov Manshin on 6/7/25.
-//  Copyright © 2025 Yakov Manshin. All rights reserved.
+//  Copyright © 2025 Yakov Manshin. See the LICENSE file for license info.
 //
 
 @testable import YMAppReceiptValidation

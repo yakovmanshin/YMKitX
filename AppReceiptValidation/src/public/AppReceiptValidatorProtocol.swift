@@ -3,7 +3,7 @@
 //  YMAppReceiptValidation
 //
 //  Created by Yakov Manshin on 9/25/23.
-//  Copyright © 2023 Yakov Manshin. All rights reserved.
+//  Copyright © 2023 Yakov Manshin. See the LICENSE file for license info.
 //
 
 /// The object that validates app receipts.

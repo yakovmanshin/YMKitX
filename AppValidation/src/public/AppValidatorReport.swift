@@ -3,7 +3,7 @@
 //  YMAppValidation
 //
 //  Created by Yakov Manshin on 7/29/24.
-//  Copyright © 2024 Yakov Manshin. All rights reserved.
+//  Copyright © 2024 Yakov Manshin. See the LICENSE file for license info.
 //
 
 import YMAppReceiptValidation

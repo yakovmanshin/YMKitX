@@ -21,7 +21,7 @@ jobs:
         XCODE_VERSION: ["16.3"]
         OS: [macos-15]
         DESTINATION:
-          - "platform=iOS Simulator,name=iPhone 16 Pro Max,OS=18.4"
+          - "platform=iOS Simulator,name=iPhone 16 Pro Max,OS=18.5"
           - "platform=macOS"
     steps:
       - name: Check Out Repository

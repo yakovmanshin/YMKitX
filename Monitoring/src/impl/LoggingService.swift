@@ -6,7 +6,9 @@
 //  Copyright © 2020 Yakov Manshin. See the LICENSE file for license info.
 //
 
+#if canImport(os)
 import os
+#endif
 
 // MARK: - LoggingService
 
@@ -48,6 +50,7 @@ extension LoggingService: LoggingServiceProtocol {
     }
     
     private func makeLogger(for category: LogCategory) -> any LoggerImplementationWrapper {
+        #if canImport(os)
         if #available(iOS 14, macOS 11, *) {
             let logger = switch category {
             case .default: os.Logger(subsystem: configuration.subsystem, category: configuration.defaultCategory)
@@ -61,6 +64,9 @@ extension LoggingService: LoggingServiceProtocol {
             }
             return OSLogWrapper(log: log)
         }
+        #else
+        debugPrint("No logger implementation is available on this platform")
+        #endif
     }
     
 }
@@ -72,6 +78,8 @@ private protocol LoggerImplementationWrapper {
     func logError(_ error: any Error)
     func logError(_ message: String)
 }
+
+#if canImport(os)
 
 // MARK: - LoggerWrapper
 
@@ -121,3 +129,5 @@ final private class OSLogWrapper: LoggerImplementationWrapper {
     }
     
 }
+
+#endif

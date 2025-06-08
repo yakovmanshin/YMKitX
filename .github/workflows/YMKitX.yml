@@ -38,7 +38,7 @@ jobs:
           -destination "${{ matrix.DESTINATION }}" \
           | xcpretty && exit ${PIPESTATUS[0]}
   spm_tests_swift:
-    name: SPM Tests (Swift)
+    name: SPM Tests (Swift on ${{ matrix.OS }})
     runs-on: ${{ matrix.OS }}
     strategy:
       matrix:
@@ -46,5 +46,8 @@ jobs:
     steps:
       - name: Check Out Repository
         uses: actions/checkout@v4
+      - name: Select Xcode Version (macOS Only)
+        if: ${{ matrix.OS == 'macos-15' }}
+        run: sudo xcode-select -switch "/Applications/Xcode_16.4.app"
       - name: Run Tests
         run: swift test

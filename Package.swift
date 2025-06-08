@@ -16,6 +16,15 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "YMAppReceiptValidation",
+            path: "AppReceiptValidation/src",
+        ),
+        .testTarget(
+            name: "YMAppReceiptValidationTests",
+            dependencies: ["YMAppReceiptValidation"],
+            path: "AppReceiptValidation/test",
+        ),
+        .target(
             name: "YMKitX",
             path: "Kit/src",
         ),

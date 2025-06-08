@@ -13,6 +13,10 @@ let package = Package(
             name: "YMKitX",
             targets: ["YMKitX"],
         ),
+        .library(
+            name: "YMValidationKit",
+            targets: ["YMAppValidation"],
+        ),
     ],
     targets: [
         .target(

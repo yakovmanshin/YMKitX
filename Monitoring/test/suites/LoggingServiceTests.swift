@@ -6,6 +6,8 @@
 //  Copyright © 2024 Yakov Manshin. See the LICENSE file for license info.
 //
 
+#if !os(Linux)
+
 @testable import YMMonitoring
 
 import OSLog
@@ -48,3 +50,5 @@ final class LoggingServiceTests: XCTestCase {
     }
     
 }
+
+#endif

@@ -14,6 +14,10 @@ let package = Package(
             targets: ["YMKitX"],
         ),
         .library(
+            name: "YMMisc",
+            targets: ["YMMisc"],
+        ),
+        .library(
             name: "YMMonitoring",
             targets: ["YMMonitoring"],
         ),
@@ -50,6 +54,15 @@ let package = Package(
             name: "YMKitXTests",
             dependencies: ["YMKitX"],
             path: "Kit/test",
+        ),
+        .target(
+            name: "YMMisc",
+            path: "Misc/src",
+        ),
+        .testTarget(
+            name: "YMMiscTests",
+            dependencies: ["YMMisc"],
+            path: "Misc/test",
         ),
         .target(
             name: "YMMonitoring",

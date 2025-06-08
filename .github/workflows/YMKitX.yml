@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.OS }}
     strategy:
       matrix:
-        XCODE_VERSION: ["16.3"]
+        XCODE_VERSION: ["16.4"]
         OS: [macos-15]
         DESTINATION:
           - "platform=iOS Simulator,name=iPhone 16 Pro Max,OS=18.5"

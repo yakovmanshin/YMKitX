@@ -8,25 +8,43 @@ let package = Package(
         .iOS(.v13),
         .macOS(.v10_15),
     ],
-    products: [
-        .library(
-            name: "YMKitX",
-            targets: ["YMKitX"],
-        ),
+    products: darwinProducts() + universalProducts(),
+    targets: darwinTargets() + universalTargets(),
+)
+
+private func darwinProducts() -> [Product] {
+    #if canImport(Darwin)
+    [
         .library(
             name: "YMMisc",
             targets: ["YMMisc"],
         ),
         .library(
-            name: "YMMonitoring",
-            targets: ["YMMonitoring"],
-        ),
-        .library(
             name: "YMValidationKit",
             targets: ["YMAppValidation"],
         ),
-    ],
-    targets: [
+    ]
+    #else
+    []
+    #endif
+}
+
+private func universalProducts() -> [Product] {
+    [
+        .library(
+            name: "YMKitX",
+            targets: ["YMKitX"],
+        ),
+        .library(
+            name: "YMMonitoring",
+            targets: ["YMMonitoring"],
+        ),
+    ]
+}
+
+private func darwinTargets() -> [Target] {
+    #if canImport(Darwin)
+    [
         .target(
             name: "YMAppReceiptValidation",
             path: "AppReceiptValidation/src",
@@ -47,15 +65,6 @@ let package = Package(
             path: "AppValidation/test",
         ),
         .target(
-            name: "YMKitX",
-            path: "Kit/src",
-        ),
-        .testTarget(
-            name: "YMKitXTests",
-            dependencies: ["YMKitX"],
-            path: "Kit/test",
-        ),
-        .target(
             name: "YMMisc",
             path: "Misc/src",
         ),
@@ -63,6 +72,23 @@ let package = Package(
             name: "YMMiscTests",
             dependencies: ["YMMisc"],
             path: "Misc/test",
+        ),
+    ]
+    #else
+    []
+    #endif
+}
+
+private func universalTargets() -> [Target] {
+    [
+        .target(
+            name: "YMKitX",
+            path: "Kit/src",
+        ),
+        .testTarget(
+            name: "YMKitXTests",
+            dependencies: ["YMKitX"],
+            path: "Kit/test",
         ),
         .target(
             name: "YMMonitoring",
@@ -74,4 +100,4 @@ let package = Package(
             path: "Monitoring/test",
         ),
     ]
-)
+}

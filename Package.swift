@@ -9,6 +9,12 @@ let package = Package(
         .macOS(.v10_15),
     ],
     products: darwinProducts() + universalProducts(),
+    dependencies: [
+        .package(
+            url: "https://github.com/swiftlang/swift-corelibs-foundation",
+            revision: "056b77bdb958f410a3dbf9a619619d1fb28b3fc8"
+        ),
+    ],
     targets: darwinTargets() + universalTargets(),
 )
 
@@ -101,6 +107,13 @@ private func universalTargets() -> [Target] {
         ),
         .target(
             name: "YMUtilities",
+            dependencies: [
+                .product(
+                    name: "Foundation",
+                    package: "swift-corelibs-foundation",
+                    condition: .when(platforms: [.android, .linux, .wasi, .windows]),
+                ),
+            ],
             path: "Utilities/src",
         ),
         .testTarget(

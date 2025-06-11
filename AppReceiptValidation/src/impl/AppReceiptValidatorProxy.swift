@@ -13,18 +13,23 @@ final class AppReceiptValidatorProxy: AppReceiptValidatorProxyProtocol {
     @available(iOS 16, *)
     @available(macOS 13, *)
     func getSharedVerificationResult() async throws -> VerificationResultProxy<AppTransactionProxy> {
-        switch try await AppTransaction.shared {
-        case .verified(let transaction): .verified(AppTransactionProxy(transaction))
-        case let .unverified(transaction, error): .unverified(AppTransactionProxy(transaction), error)
-        }
+        try await verificationResult(from: AppTransaction.shared)
     }
     
     @available(iOS 16, *)
     @available(macOS 13, *)
     func refreshVerificationResult() async throws -> VerificationResultProxy<AppTransactionProxy> {
-        switch try await AppTransaction.refresh() {
-        case .verified(let transaction): .verified(AppTransactionProxy(transaction))
-        case let .unverified(transaction, error): .unverified(AppTransactionProxy(transaction), error)
+        try await verificationResult(from: AppTransaction.refresh())
+    }
+    
+    @available(iOS 16, *)
+    @available(macOS 13, *)
+    private func verificationResult(
+        from result: VerificationResult<AppTransaction>
+    ) -> VerificationResultProxy<AppTransactionProxy> {
+        switch result {
+            case .verified(let transaction): .verified(AppTransactionProxy(transaction))
+            case let .unverified(transaction, error): .unverified(AppTransactionProxy(transaction), error)
         }
     }
     

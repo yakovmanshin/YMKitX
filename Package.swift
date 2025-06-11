@@ -99,5 +99,14 @@ private func universalTargets() -> [Target] {
             dependencies: ["YMMonitoring"],
             path: "Monitoring/test",
         ),
+        .target(
+            name: "YMUtilities",
+            path: "Utilities/src",
+        ),
+        .testTarget(
+            name: "YMUtilitiesTests",
+            dependencies: ["YMUtilities"],
+            path: "Utilities/test",
+        ),
     ]
 }

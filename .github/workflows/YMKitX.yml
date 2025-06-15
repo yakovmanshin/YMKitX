@@ -49,5 +49,8 @@ jobs:
       - name: Select Xcode Version (macOS Only)
         if: ${{ matrix.OS == 'macos-15' }}
         run: sudo xcode-select -switch "/Applications/Xcode_16.4.app"
+      - name: Install Packages (Linux Only)
+        if: ${{ matrix.OS == 'ubuntu-24.04' }}
+        run: sudo apt install libblocksruntime-dev
       - name: Run Tests
         run: swift test

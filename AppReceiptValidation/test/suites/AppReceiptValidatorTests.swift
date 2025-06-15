@@ -324,6 +324,56 @@ struct AppReceiptValidatorTests {
         #expect(actual == "7d30e01f8fd318434b2f5ac0a49936d14eac344505ef789fa89a8a57b5e181a0f23827d610107e0f4defe5214f9f6130")
     }
     
+    @Test func verifyAppIdentity_success() async throws {
+        try await validator.verifyAppIdentity(for: .sample)
+    }
+    
+    @Test func verifyAppIdentity_success_skipped() async throws {
+        let validator = AppReceiptValidator(proxy: proxy, appIdentity: nil)
+        
+        try await validator.verifyAppIdentity(for: .sample)
+    }
+    
+    @Test func verifyAppIdentity_failure_bundleID() async throws {
+        let transaction = AppTransactionProxy(
+            bundleID: "TEST_AnotherBundleID",
+            environment: .production,
+            appVersion: "1.23.45",
+            originalAppVersion: "",
+            purchaseDate: Date(),
+            deviceVerificationNonce: .allZero,
+            deviceVerification: Data()
+        )
+        
+        let error = try await #require(throws: AppReceiptValidatorError.self) {
+            try await validator.verifyAppIdentity(for: transaction)
+        }
+        guard case .other = error else {
+            Issue.record()
+            return
+        }
+    }
+    
+    @Test func verifyAppIdentity_failure_appVersion() async throws {
+        let transaction = AppTransactionProxy(
+            bundleID: "TEST_BundleID",
+            environment: .sandbox,
+            appVersion: "10.0.0",
+            originalAppVersion: "",
+            purchaseDate: Date(),
+            deviceVerificationNonce: .allZero,
+            deviceVerification: Data()
+        )
+        
+        let error = try await #require(throws: AppReceiptValidatorError.self) {
+            try await validator.verifyAppIdentity(for: transaction)
+        }
+        guard case .other = error else {
+            Issue.record()
+            return
+        }
+    }
+    
 }
 
 // MARK: - Utilities

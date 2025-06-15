@@ -29,9 +29,14 @@ public enum AppReceiptValidatorError: Error {
     /// Device-verification tags don’t match.
     case deviceVerificationMismatch(expected: String, actual: String)
     
-    /// Other (unexpected) error.
+    // TODO: This will constitute a breaking change:
+//    /// Failed to verify app identity.
+//    case appIdentityMismatch
+    
+    /// Other error.
     ///
-    /// + This error is never expected to be thrown.
+    /// + Generally, this error is not expected to be thrown.
+    /// + The exception is newly-introduced errors, thrown as `other` to preserve backward compatibility.
     case other
     
 }
@@ -52,6 +57,9 @@ extension AppReceiptValidatorError: CustomStringConvertible, LocalizedError {
             "Invalid device-verification string: \(string)"
         case .deviceVerificationMismatch(let expected, let actual):
             "Device-verification data mismatched: expected (\(expected.prefix(16))…) / computed (\(actual.prefix(16))…)"
+        // TODO: This will constitute a breaking change:
+//        case .appIdentityMismatch:
+//            "The app identity does not match the receipt"
         case .other:
             "An unknown error occurred"
         }

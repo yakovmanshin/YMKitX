@@ -13,9 +13,11 @@ import CryptoKit
 final actor AppReceiptValidator<Proxy: AppReceiptValidatorProxyProtocol> {
     
     private let proxy: Proxy
+    private let appIdentity: AppIdentity?
     
-    init(proxy: Proxy) {
+    init(proxy: Proxy, appIdentity: AppIdentity?) {
         self.proxy = proxy
+        self.appIdentity = appIdentity
     }
     
 }
@@ -41,6 +43,12 @@ extension AppReceiptValidator: AppReceiptValidatorProtocol {
         
         do {
             try verifyDevice(for: verifiedTransaction)
+        } catch {
+            return .init(result: .failure(error), transaction: verifiedTransaction)
+        }
+        
+        do {
+            try verifyAppIdentity(for: verifiedTransaction)
         } catch {
             return .init(result: .failure(error), transaction: verifiedTransaction)
         }
@@ -104,6 +112,22 @@ extension AppReceiptValidator: AppReceiptValidatorProtocol {
     
     private func formattedString<BS: Sequence>(fromBytes byteSequence: BS) -> String where BS.Element == UInt8 {
         byteSequence.map({ String(format: "%02x", $0) }).joined()
+    }
+    
+    func verifyAppIdentity(for transaction: AppTransactionProxy) throws(AppReceiptValidatorError) {
+        guard let appIdentity else { return }
+        
+        if appIdentity.bundleIdentifier != transaction.bundleID {
+            // TODO: This will constitute a breaking change:
+//            throw .appIdentityMismatch
+            throw .other
+        }
+        
+        if appIdentity.version.string != transaction.appVersion {
+            // TODO: This will constitute a breaking change:
+//            throw .appIdentityMismatch
+            throw .other
+        }
     }
     
 }

@@ -28,7 +28,7 @@ public struct SoftwareVersion: Sendable {
 
 extension SoftwareVersion {
     
-    var string: String {
+    public var string: String {
         "\(major).\(minor).\(patch)"
     }
     

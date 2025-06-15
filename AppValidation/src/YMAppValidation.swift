@@ -6,7 +6,8 @@
 //  Copyright © 2025 Yakov Manshin. See the LICENSE file for license info.
 //
 
-import YMAppReceiptValidation
+@_exported import YMAppReceiptValidation
+@_exported import YMUtilities
 
 /// Initializes and returns an opaque-type app validator.
 ///

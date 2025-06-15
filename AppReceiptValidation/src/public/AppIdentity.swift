@@ -6,8 +6,6 @@
 //  Copyright © 2025 Yakov Manshin. See the LICENSE file for license info.
 //
 
-import YMUtilities
-
 /// The object that fixes the identity of the app in place.
 public struct AppIdentity: Sendable {
     

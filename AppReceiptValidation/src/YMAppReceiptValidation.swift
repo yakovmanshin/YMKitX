@@ -6,6 +6,8 @@
 //  Copyright © 2025 Yakov Manshin. See the LICENSE file for license info.
 //
 
+@_exported import YMUtilities
+
 /// Initializes and returns an opaque-type app-receipt validator.
 ///
 /// - Parameter appIdentity: *Optional.* The object which describes the checked app’s identity.

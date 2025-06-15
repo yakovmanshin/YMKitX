@@ -7,6 +7,9 @@
 //
 
 /// Initializes and returns an opaque-type app-receipt validator.
+///
+/// - Parameter appIdentity: *Optional.* The object which describes the checked app’s identity.
+/// If no value is provided, app-identity verification will be skipped.
 public func makeAppReceiptValidator(appIdentity: AppIdentity? = nil) -> some AppReceiptValidatorProtocol {
     AppReceiptValidator(
         proxy: AppReceiptValidatorProxy(),

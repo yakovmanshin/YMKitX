@@ -10,6 +10,7 @@
 
 import Foundation
 import Testing
+import YMUtilities
 
 // MARK: - Tests
 
@@ -19,7 +20,7 @@ struct AppReceiptValidatorTests {
     let proxy = AppReceiptValidatorProxyStub()
     
     init() {
-        validator = AppReceiptValidator(proxy: proxy)
+        validator = AppReceiptValidator(proxy: proxy, appIdentity: .sample)
     }
     
     @Test func validateAppReceipt_allowUI_success_shared() async {
@@ -332,7 +333,7 @@ fileprivate extension AppTransactionProxy {
     static let sample = AppTransactionProxy(
         bundleID: "TEST_BundleID",
         environment: .other("TEST_Environment"),
-        appVersion: "TEST_AppVersion",
+        appVersion: "1.23.45",
         originalAppVersion: "TEST_OriginalAppVersion",
         purchaseDate: Date(timeIntervalSince1970: 1521288000),
         deviceVerificationNonce: .allZero,
@@ -377,4 +378,8 @@ extension AppTransactionProxy.Environment: Equatable {
 fileprivate extension UUID {
     static let allZero = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
     static let nonZero = UUID(uuidString: "01234567-89AB-CDEF-0123-456789ABCDEF")!
+}
+
+fileprivate extension AppIdentity {
+    static let sample = AppIdentity(bundleIdentifier: "TEST_BundleID", version: SoftwareVersion("1.23.45")!)
 }

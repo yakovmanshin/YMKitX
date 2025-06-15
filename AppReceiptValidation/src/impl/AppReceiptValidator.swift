@@ -13,9 +13,11 @@ import CryptoKit
 final actor AppReceiptValidator<Proxy: AppReceiptValidatorProxyProtocol> {
     
     private let proxy: Proxy
+    private let appIdentity: AppIdentity?
     
-    init(proxy: Proxy) {
+    init(proxy: Proxy, appIdentity: AppIdentity?) {
         self.proxy = proxy
+        self.appIdentity = appIdentity
     }
     
 }

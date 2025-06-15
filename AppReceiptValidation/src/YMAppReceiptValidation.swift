@@ -7,6 +7,9 @@
 //
 
 /// Initializes and returns an opaque-type app-receipt validator.
-public func makeAppReceiptValidator() -> some AppReceiptValidatorProtocol {
-    AppReceiptValidator(proxy: AppReceiptValidatorProxy())
+public func makeAppReceiptValidator(appIdentity: AppIdentity? = nil) -> some AppReceiptValidatorProtocol {
+    AppReceiptValidator(
+        proxy: AppReceiptValidatorProxy(),
+        appIdentity: appIdentity,
+    )
 }

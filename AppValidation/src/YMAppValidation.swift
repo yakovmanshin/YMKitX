@@ -9,6 +9,6 @@
 import YMAppReceiptValidation
 
 /// Initializes and returns an opaque-type app validator.
-public func makeAppValidator() -> some AppValidatorProtocol {
-    AppValidator(appReceiptValidator: makeAppReceiptValidator())
+public func makeAppValidator(appIdentity: AppIdentity? = nil) -> some AppValidatorProtocol {
+    AppValidator(appReceiptValidator: makeAppReceiptValidator(appIdentity: appIdentity))
 }

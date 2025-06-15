@@ -47,6 +47,7 @@ private func darwinTargets() -> [Target] {
     [
         .target(
             name: "YMAppReceiptValidation",
+            dependencies: ["YMUtilities"],
             path: "AppReceiptValidation/src",
         ),
         .testTarget(

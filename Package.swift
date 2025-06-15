@@ -73,6 +73,15 @@ private func darwinTargets() -> [Target] {
             dependencies: ["YMMisc"],
             path: "Misc/test",
         ),
+        .target(
+            name: "YMUtilities",
+            path: "Utilities/src",
+        ),
+        .testTarget(
+            name: "YMUtilitiesTests",
+            dependencies: ["YMUtilities"],
+            path: "Utilities/test",
+        ),
     ]
     #else
     []

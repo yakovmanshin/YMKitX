@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   spm_tests_xcode:
-    name: SPM Tests (Xcode ${{ matrix.XCODE_VERSION }})
+    name: SPM Tests (Xcode ${{ matrix.XCODE_VERSION }}, ${{ matrix.DESTINATION }})
     runs-on: ${{ matrix.OS }}
     strategy:
       matrix:

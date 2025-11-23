@@ -23,24 +23,34 @@ final public class AppInfo: Sendable {
 
 public extension AppInfo {
     
-    /// Returns the display name (product name) of the host app.
+    /// The display name (product name) of the host app.
     var name: String? {
         bundle.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
     }
     
-    /// Returns the bundle identifier of the host app.
+    /// The bundle identifier of the host app.
     var bundleID: String? {
-        bundle.object(forInfoDictionaryKey: "CFBundleIdentifier") as? String
+        bundle.object(forInfoDictionaryKey: kCFBundleIdentifierKey as String) as? String
     }
     
-    /// Returns the version number of the host app.
+    /// The bundle name of the host app.
+    var bundleName: String? {
+        bundle.object(forInfoDictionaryKey: kCFBundleNameKey as String) as? String
+    }
+    
+    /// The executable name of the host app.
+    var executableName: String? {
+        bundle.object(forInfoDictionaryKey: kCFBundleExecutableKey as String) as? String
+    }
+    
+    /// The version number of the host app.
     var version: String? {
         bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
     }
     
-    /// Returns the build number of the host app.
+    /// The build number of the host app.
     var build: String? {
-        bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+        bundle.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String
     }
     
 }

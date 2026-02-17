@@ -19,8 +19,11 @@ jobs:
     strategy:
       matrix:
         XCODE_VERSION: ["16.4", "26.2", "26.3"]
-        OS: [macos-15]
+        OS: [macos-15, macos-26]
         DESTINATION_TYPE: [macOS, iOS_Simulator]
+        exclude:
+          - OS: macos-26
+            XCODE_VERSION: "16.4"
         include:
           - DESTINATION_TYPE: macOS
             DESTINATION: "platform=macOS"

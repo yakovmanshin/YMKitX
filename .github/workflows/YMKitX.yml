@@ -55,15 +55,31 @@ jobs:
     runs-on: ${{ matrix.OS }}
     strategy:
       matrix:
-        OS: [macos-15, macos-26, ubuntu-24.04]
+        include:
+          - OS: macos-15
+            XCODE_VERSION: "16.4"
+          - OS: macos-15
+            XCODE_VERSION: "26.2"
+          - OS: macos-15
+            XCODE_VERSION: "26.3"
+          - OS: macos-26
+            XCODE_VERSION: "26.2"
+          - OS: macos-26
+            XCODE_VERSION: "26.3"
+          - OS: ubuntu-24.04
+            XCODE_VERSION: ""
     steps:
       - name: Check Out Repository
         uses: actions/checkout@v6
       - name: Select Xcode Version (macOS Only)
-        if: ${{ matrix.OS == 'macos-15' }}
-        run: sudo xcode-select -switch "/Applications/Xcode_16.4.app"
-      - name: Install Packages (Linux Only)
-        if: ${{ matrix.OS == 'ubuntu-24.04' }}
-        run: sudo apt install libblocksruntime-dev
+        if: startsWith(matrix.OS, 'macos')
+        run: sudo xcode-select -switch "/Applications/Xcode_${{ matrix.XCODE_VERSION }}.app"
+      - name: Install Packages (Ubuntu Only)
+        if: startsWith(matrix.OS, 'ubuntu')
+        run: |
+          sudo apt update
+          sudo apt install -y libblocksruntime-dev
+      - name: Check Swift Version
+        run: swift --version
       - name: Run Tests
         run: swift test

@@ -51,7 +51,7 @@ jobs:
           -destination "${{ matrix.DESTINATION }}" \
           | xcpretty && exit ${PIPESTATUS[0]}
   spm_tests_swift:
-    name: "SPM Tests (Swift CLI): ${{ matrix.OS }}"
+    name: "SPM Tests (Swift CLI): ${{ matrix.OS }}${{ matrix.XCODE_VERSION != '' && format(' / Xcode {0}', matrix.XCODE_VERSION) || '' }}"
     runs-on: ${{ matrix.OS }}
     strategy:
       matrix:

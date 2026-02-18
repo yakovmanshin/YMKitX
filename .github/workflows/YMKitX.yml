@@ -14,18 +14,31 @@ concurrency:
   cancel-in-progress: true
 jobs:
   spm_tests_xcode:
-    name: SPM Tests (${{ matrix.OS }} / Xcode ${{ matrix.XCODE_VERSION }} / ${{ matrix.DESTINATION }})
+    name: "SPM Tests (Xcode): ${{ matrix.OS }} / Xcode ${{ matrix.XCODE_VERSION }} / ${{ matrix.DESTINATION }}"
     runs-on: ${{ matrix.OS }}
     strategy:
       matrix:
-        XCODE_VERSION: ["16.4"]
-        OS: [macos-15]
-        DESTINATION:
-          - "platform=iOS Simulator,name=iPhone 16 Pro Max,OS=18.5"
-          - "platform=macOS"
+        XCODE_VERSION: ["16.4", "26.2", "26.3"]
+        OS: [macos-15, macos-26]
+        DESTINATION_TYPE: [macOS, iOS_Simulator]
+        exclude:
+          - OS: macos-26
+            XCODE_VERSION: "16.4"
+        include:
+          - DESTINATION_TYPE: macOS
+            DESTINATION: "platform=macOS"
+          - DESTINATION_TYPE: iOS_Simulator
+            XCODE_VERSION: "16.4"
+            DESTINATION: "platform=iOS Simulator,name=iPhone 16 Pro Max,OS=18.6"
+          - DESTINATION_TYPE: iOS_Simulator
+            XCODE_VERSION: "26.2"
+            DESTINATION: "platform=iOS Simulator,name=iPhone 17,OS=26.2"
+          - DESTINATION_TYPE: iOS_Simulator
+            XCODE_VERSION: "26.3"
+            DESTINATION: "platform=iOS Simulator,name=iPhone 17 Pro Max,OS=26.2"
     steps:
       - name: Check Out Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Select Xcode Version
         run: sudo xcode-select -switch "/Applications/Xcode_${{ matrix.XCODE_VERSION }}.app"
       - name: Run Tests
@@ -38,19 +51,35 @@ jobs:
           -destination "${{ matrix.DESTINATION }}" \
           | xcpretty && exit ${PIPESTATUS[0]}
   spm_tests_swift:
-    name: SPM Tests (${{ matrix.OS }} / Swift)
+    name: "SPM Tests (Swift CLI): ${{ matrix.OS }}${{ matrix.XCODE_VERSION != '' && format(' / Xcode {0}', matrix.XCODE_VERSION) || '' }}"
     runs-on: ${{ matrix.OS }}
     strategy:
       matrix:
-        OS: [macos-15, ubuntu-24.04]
+        include:
+          - OS: macos-15
+            XCODE_VERSION: "16.4"
+          - OS: macos-15
+            XCODE_VERSION: "26.2"
+          - OS: macos-15
+            XCODE_VERSION: "26.3"
+          - OS: macos-26
+            XCODE_VERSION: "26.2"
+          - OS: macos-26
+            XCODE_VERSION: "26.3"
+          - OS: ubuntu-24.04
+            XCODE_VERSION: ""
     steps:
       - name: Check Out Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Select Xcode Version (macOS Only)
-        if: ${{ matrix.OS == 'macos-15' }}
-        run: sudo xcode-select -switch "/Applications/Xcode_16.4.app"
-      - name: Install Packages (Linux Only)
-        if: ${{ matrix.OS == 'ubuntu-24.04' }}
-        run: sudo apt install libblocksruntime-dev
+        if: startsWith(matrix.OS, 'macos')
+        run: sudo xcode-select -switch "/Applications/Xcode_${{ matrix.XCODE_VERSION }}.app"
+      - name: Install Packages (Ubuntu Only)
+        if: startsWith(matrix.OS, 'ubuntu')
+        run: |
+          sudo apt update
+          sudo apt install -y libblocksruntime-dev
+      - name: Check Swift Version
+        run: swift --version
       - name: Run Tests
         run: swift test

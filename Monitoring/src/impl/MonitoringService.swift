@@ -78,20 +78,27 @@ extension MonitoringService: MonitoringServiceProtocol {
         try? await trackingService?.track(event)
         
         if configuration.logEvents {
-            await loggingService?.log(for: .custom("YMMonitoring.TrackingService"), "Did track event \(event.name)")
+            await loggingService?.log(
+                for: .custom("YMMonitoring.TrackingService"),
+                level: .info,
+                "Did track event \(event.name)"
+            )
         }
     }
     
+    func log(category: String?, level: LogLevel, _ message: String) async {
+        let category: LogCategory = if let category { .custom(category) } else { .default }
+        await loggingService?.log(for: category, level: level, message)
+    }
+    
+    @available(*, deprecated, renamed: "log(category:level:_:)")
     func log(forCategory category: String, _ message: String) async {
-        await log(for: .custom(category), message)
+        await log(category: category, level: .default, message)
     }
     
+    @available(*, deprecated, renamed: "log(category:level:_:)")
     func log(_ message: String) async {
-        await log(for: .default, message)
-    }
-    
-    private func log(for category: LogCategory, _ message: String) async {
-        await loggingService?.log(for: category, message)
+        await log(category: nil, level: .default, message)
     }
     
     func reportError(_ error: any Swift.Error) async {
@@ -114,7 +121,7 @@ extension MonitoringService: MonitoringServiceProtocol {
         TrackingEvent(configuration.eventNameForErrors, parameters: parametersFromError(error))
     }
     
-    func parametersFromError(_ error: any Error) -> TrackingEvent.Parameters {
+    private func parametersFromError(_ error: any Error) -> TrackingEvent.Parameters {
         let nsError = error as NSError
         return [
             "NSError-Code": nsError.code,

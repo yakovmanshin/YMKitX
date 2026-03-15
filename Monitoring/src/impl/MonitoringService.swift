@@ -86,16 +86,19 @@ extension MonitoringService: MonitoringServiceProtocol {
         }
     }
     
+    func log(category: String?, level: LogLevel, _ message: String) async {
+        let category: LogCategory = if let category { .custom(category) } else { .default }
+        await loggingService?.log(for: category, level: level, message)
+    }
+    
+    @available(*, deprecated, renamed: "log(category:level:_:)")
     func log(forCategory category: String, _ message: String) async {
-        await log(for: .custom(category), message)
+        await log(category: category, level: .default, message)
     }
     
+    @available(*, deprecated, renamed: "log(category:level:_:)")
     func log(_ message: String) async {
-        await log(for: .default, message)
-    }
-    
-    private func log(for category: LogCategory, _ message: String) async {
-        await loggingService?.log(for: category, level: .default, message)
+        await log(category: nil, level: .default, message)
     }
     
     func reportError(_ error: any Swift.Error) async {

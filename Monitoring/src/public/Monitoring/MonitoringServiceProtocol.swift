@@ -103,13 +103,6 @@ public extension MonitoringServiceProtocol {
         }
     }
     
-    @available(*, deprecated, renamed: "logSync(category:level:_:)")
-    func logSync(_ message: String) {
-        Task(priority: .utility) {
-            await log(message)
-        }
-    }
-    
     func reportErrorSync(_ error: any Error) {
         Task(priority: .utility) {
             await reportError(error)

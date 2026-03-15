@@ -13,7 +13,6 @@
 import OSLog
 import Testing
 
-@available(iOS 15, *)
 struct LoggingServiceTests {
     
     private let service = LoggingService(configuration: .init(

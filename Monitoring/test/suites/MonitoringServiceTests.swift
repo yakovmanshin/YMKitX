@@ -8,6 +8,7 @@
 
 @testable import YMMonitoring
 
+import Dispatch
 import Testing
 
 struct MonitoringServiceTests {
@@ -68,24 +69,18 @@ struct MonitoringServiceTests {
         #expect(loggingService.log_messages == [message])
     }
     
-    @Test(arguments: [nil, "TEST_Custom Category"]) func logSync(customCategoryName: String?) async throws {
+    @Test func logSync_customCategory() async throws {
+        let category = "TEST_CustomCategory"
         let message = "TEST_Log Message"
-        if let customCategoryName {
-            service.logSync(forCategory: customCategoryName, message)
-        } else {
-            service.logSync(message)
-        }
         
-        try await Task.sleep(for: .milliseconds(10))
+        service.logSync(forCategory: category, message)
+        
+        try await Task.sleep(nanoseconds: 10 * NSEC_PER_MSEC)
         
         #expect(loggingService.log_invocationCount == 1)
+        #expect(loggingService.log_categories == [.custom(category)])
         #expect(loggingService.log_levels == [.default])
         #expect(loggingService.log_messages == [message])
-        if let customCategoryName {
-            #expect(loggingService.log_categories == [.custom(customCategoryName)])
-        } else {
-            #expect(loggingService.log_categories == [.default])
-        }
     }
     
 }

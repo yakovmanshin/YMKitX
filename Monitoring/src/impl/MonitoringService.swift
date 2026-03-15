@@ -114,7 +114,7 @@ extension MonitoringService: MonitoringServiceProtocol {
         TrackingEvent(configuration.eventNameForErrors, parameters: parametersFromError(error))
     }
     
-    func parametersFromError(_ error: any Error) -> TrackingEvent.Parameters {
+    private func parametersFromError(_ error: any Error) -> TrackingEvent.Parameters {
         let nsError = error as NSError
         return [
             "NSError-Code": nsError.code,

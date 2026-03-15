@@ -28,7 +28,7 @@ final actor LoggingService {
 extension LoggingService: LoggingServiceProtocol {
     
     func log(for category: LogCategory, _ message: String) {
-        logger(for: category).log(message)
+        logger(for: category).log(level: .default, message)
     }
     
     func logError(_ error: any Error, for category: LogCategory) {
@@ -36,7 +36,7 @@ extension LoggingService: LoggingServiceProtocol {
     }
     
     func logError(for category: LogCategory, _ message: String) {
-        logger(for: category).logError(message)
+        logger(for: category).log(level: .error, message)
     }
     
     private func logger(for category: LogCategory) -> any LoggerImplementationWrapper {
@@ -75,12 +75,21 @@ extension LoggingService: LoggingServiceProtocol {
 // MARK: - LoggerImplementationWrapper
 
 private protocol LoggerImplementationWrapper {
-    func log(_ message: String)
+    func log(level: LogLevel, _ message: String)
     func logError(_ error: any Error)
-    func logError(_ message: String)
 }
 
 #if canImport(os)
+
+@inline(__always) fileprivate func osLogType(from logLevel: LogLevel) -> OSLogType {
+    switch logLevel {
+    case .debug: .debug
+    case .info: .info
+    case .default: .default
+    case .error: .error
+    case .fault: .fault
+    }
+}
 
 // MARK: - LoggerWrapper
 
@@ -93,16 +102,12 @@ final private class LoggerWrapper: LoggerImplementationWrapper {
         self.logger = logger
     }
     
-    func log(_ message: String) {
-        logger.log("\(message, privacy: .public)")
+    func log(level: LogLevel, _ message: String) {
+        logger.log(level: osLogType(from: level), "\(message, privacy: .public)")
     }
     
     func logError(_ error: any Error) {
         logger.error("Error: \(error.localizedDescription, privacy: .public)")
-    }
-    
-    func logError(_ message: String) {
-        logger.error("Error: \(message, privacy: .public)")
     }
     
 }
@@ -117,16 +122,12 @@ final private class OSLogWrapper: LoggerImplementationWrapper {
         self.log = log
     }
     
-    func log(_ message: String) {
-        os_log(.default, log: log, "%{public}@", message)
+    func log(level: LogLevel, _ message: String) {
+        os_log(osLogType(from: level), log: log, "%{public}@", message)
     }
     
     func logError(_ error: any Error) {
         os_log(.error, log: log, "Error: %{public}@", error.localizedDescription)
-    }
-    
-    func logError(_ message: String) {
-        os_log(.error, log: log, "Error: %{public}@", message)
     }
     
 }
@@ -137,16 +138,13 @@ final private class OSLogWrapper: LoggerImplementationWrapper {
 
 final private class StandardOutputWrapper: LoggerImplementationWrapper {
     
-    func log(_ message: String) {
-        print(message)
+    func log(level: LogLevel, _ message: String) {
+        let levelString = "\(level)".uppercased()
+        print("\(levelString): \(message)")
     }
     
     func logError(_ error: any Error) {
         print("Error: \(error.localizedDescription)")
-    }
-    
-    func logError(_ message: String) {
-        print("Error: \(message)")
     }
     
 }

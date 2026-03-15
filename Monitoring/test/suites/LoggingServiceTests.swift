@@ -11,35 +11,43 @@
 @testable import YMMonitoring
 
 import OSLog
-import XCTest
+import Testing
 
-@available(iOS 15, *)
-final class LoggingServiceTests: XCTestCase {
+struct LoggingServiceTests {
     
-    private var service: LoggingService!
+    private let service = LoggingService(configuration: .init(
+        subsystem: "TEST_Subsystem",
+        defaultCategory: "TEST_Category"
+    ))
     private let store = try! OSLogStore(scope: .currentProcessIdentifier)
     
-    override func setUpWithError() throws {
-        try super.setUpWithError()
+    @Test(arguments: [
+        (.default, .default),
+        (.custom("TEST_Custom Category 1"), .debug),
+        (.custom("TEST_CustomCategory2"), .fault),
+        (.custom("TEST_Cat3"), .error),
+    ] as [(LogCategory, LogLevel)]) func log(category: LogCategory, level: LogLevel) async throws {
+        let message = "TEST_Log Message"
         
-        service = LoggingService(configuration: .init(subsystem: "TEST_Subsystem", defaultCategory: "TEST_Category"))
-    }
-    
-    func test_logWithMessage_defaultCategory_debugLevel() async throws {
-        await service.log(for: .default, level: .debug, "TEST_LogMessage")
+        await service.log(for: category, level: level, message)
         
         let entries = try store.getEntries()
-        XCTAssertTrue(entries.contains(where: { $0.composedMessage == "TEST_LogMessage" }))
+        #expect(entries.contains(where: { $0.composedMessage == message }))
     }
     
-    func test_logError() async throws {
+    @Test(arguments: [
+        .default,
+        .custom("TEST_Custom_Category_1")
+    ] as [LogCategory]) func logError(category: LogCategory) async throws {
+        let errorDescription = "TEST_ErrorDescription"
+        
         await service.logError(
-            NSError(domain: "TEST_Error", code: 123, userInfo: [NSLocalizedDescriptionKey: "TEST_ErrorDescription"]),
+            NSError(domain: "TEST_Error", code: 123, userInfo: [NSLocalizedDescriptionKey: errorDescription]),
             for: .default
         )
         
         let entries = try store.getEntries()
-        XCTAssertTrue(entries.contains(where: { $0.composedMessage == "Error: TEST_ErrorDescription" }))
+        #expect(entries.contains(where: { $0.composedMessage == "Error: TEST_ErrorDescription" }))
     }
     
 }

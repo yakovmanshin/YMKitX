@@ -19,17 +19,35 @@ public protocol MonitoringServiceProtocol: Sendable {
     /// - Parameter event: *Required.* The monitoring event.
     func track(_ event: TrackingEvent) async
     
+    /// Records the message to the local log.
+    ///
+    /// - Parameters:
+    ///   - category: *Optional.* The log category.
+    ///   - level: *Optional.* The level of the log message.
+    ///   - message: *Required.* The message to log.
+    func log(category: String?, level: LogLevel, _ message: String) async
+    
     /// Records the message in the local log.
-    ///  
+    ///
+    /// - Warning: This method will be removed in the next major release.\
+    /// \
+    /// If you’re using a custom implemention of `MonitoringServiceProtocol`, you should implement `log(category:level:_:)` instead.
+    ///
     /// - Parameters:
     ///   - category: *Required.* The log category.
     ///   - message: *Required.* The message to log.
+    @available(*, deprecated, renamed: "log(category:level:_:)")
     func log(forCategory category: String, _ message: String) async
     
     /// Records the message in the local log.
     ///
+    /// - Warning: This method will be removed in the next major release.\
+    /// \
+    /// If you’re using a custom implemention of `MonitoringServiceProtocol`, you should implement `log(category:level:_:)` instead.
+    ///
     /// - Parameters:
     ///   - message: *Required.* The message to log.
+    @available(*, deprecated, renamed: "log(category:level:_:)")
     func log(_ message: String) async
     
     /// Records information about the error.
@@ -48,6 +66,20 @@ public protocol MonitoringServiceProtocol: Sendable {
     
 }
 
+// MARK: - API Compatibility
+
+public extension MonitoringServiceProtocol {
+    
+    func log(category: String? = nil, level: LogLevel = .default, _ message: String) async {
+        if let category {
+            await log(forCategory: category, message)
+        } else {
+            await log(message)
+        }
+    }
+    
+}
+
 // MARK: - Synchronous Versions
 
 public extension MonitoringServiceProtocol {
@@ -58,12 +90,20 @@ public extension MonitoringServiceProtocol {
         }
     }
     
+    func logSync(category: String? = nil, level: LogLevel = .default, _ message: String) {
+        Task(priority: .utility) {
+            await log(category: category, level: level, message)
+        }
+    }
+    
+    @available(*, deprecated, renamed: "logSync(category:level:_:)")
     func logSync(forCategory category: String, _ message: String) {
         Task(priority: .utility) {
             await log(forCategory: category, message)
         }
     }
     
+    @available(*, deprecated, renamed: "logSync(category:level:_:)")
     func logSync(_ message: String) {
         Task(priority: .utility) {
             await log(message)

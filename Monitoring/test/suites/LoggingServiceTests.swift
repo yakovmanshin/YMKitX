@@ -25,8 +25,8 @@ final class LoggingServiceTests: XCTestCase {
         service = LoggingService(configuration: .init(subsystem: "TEST_Subsystem", defaultCategory: "TEST_Category"))
     }
     
-    func test_logWithMessage_defaultCategory_debugLevel() async throws {
-        await service.log(for: .default, level: .debug, "TEST_LogMessage")
+    func test_logWithMessage_defaultCategory_defaultLevel() async throws {
+        await service.log(for: .default, level: .default, "TEST_LogMessage")
         
         let entries = try store.getEntries()
         XCTAssertTrue(entries.contains(where: { $0.composedMessage == "TEST_LogMessage" }))

@@ -8,7 +8,6 @@
 
 @testable import YMMonitoring
 
-import Dispatch
 import Testing
 
 struct MonitoringServiceTests {
@@ -75,7 +74,7 @@ struct MonitoringServiceTests {
         
         service.logSync(forCategory: category, message)
         
-        try await Task.sleep(nanoseconds: 10 * NSEC_PER_MSEC)
+        try await Task.sleep(nanoseconds: 10 * 1_000_000)
         
         #expect(loggingService.log_invocationCount == 1)
         #expect(loggingService.log_categories == [.custom(category)])

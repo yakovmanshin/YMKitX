@@ -27,16 +27,12 @@ final actor LoggingService {
 
 extension LoggingService: LoggingServiceProtocol {
     
-    func log(for category: LogCategory, _ message: String) {
-        logger(for: category).log(level: .default, message)
+    func log(for category: LogCategory, level: LogLevel, _ message: String) async {
+        logger(for: category).log(level: level, message)
     }
     
     func logError(_ error: any Error, for category: LogCategory) {
         logger(for: category).logError(error)
-    }
-    
-    func logError(for category: LogCategory, _ message: String) {
-        logger(for: category).log(level: .error, message)
     }
     
     private func logger(for category: LogCategory) -> any LoggerImplementationWrapper {

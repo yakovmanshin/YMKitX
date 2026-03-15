@@ -25,11 +25,11 @@ final class LoggingServiceTests: XCTestCase {
         service = LoggingService(configuration: .init(subsystem: "TEST_Subsystem", defaultCategory: "TEST_Category"))
     }
     
-    func test_logWithMessage_defaultCategory() async throws {
-        await service.log(for: .default, "TEST_LogMessage")
+    func test_logWithMessage_defaultCategory_debugLevel() async throws {
+        await service.log(for: .default, level: .debug, "TEST_LogMessage")
         
         let entries = try store.getEntries()
-        XCTAssertTrue(entries.contains(where:  { $0.composedMessage == "TEST_LogMessage" }))
+        XCTAssertTrue(entries.contains(where: { $0.composedMessage == "TEST_LogMessage" }))
     }
     
     func test_logError() async throws {
@@ -39,14 +39,7 @@ final class LoggingServiceTests: XCTestCase {
         )
         
         let entries = try store.getEntries()
-        XCTAssertTrue(entries.contains(where:  { $0.composedMessage == "Error: TEST_ErrorDescription" }))
-    }
-    
-    func test_logErrorWithMessage() async throws {
-        await service.logError(for: .default, "TEST_ErrorMessage")
-        
-        let entries = try store.getEntries()
-        XCTAssertTrue(entries.contains(where:  { $0.composedMessage == "Error: TEST_ErrorMessage" }))
+        XCTAssertTrue(entries.contains(where: { $0.composedMessage == "Error: TEST_ErrorDescription" }))
     }
     
 }

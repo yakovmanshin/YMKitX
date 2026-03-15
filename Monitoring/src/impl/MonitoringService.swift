@@ -78,7 +78,11 @@ extension MonitoringService: MonitoringServiceProtocol {
         try? await trackingService?.track(event)
         
         if configuration.logEvents {
-            await loggingService?.log(for: .custom("YMMonitoring.TrackingService"), "Did track event \(event.name)")
+            await loggingService?.log(
+                for: .custom("YMMonitoring.TrackingService"),
+                level: .info,
+                "Did track event \(event.name)"
+            )
         }
     }
     
@@ -91,7 +95,7 @@ extension MonitoringService: MonitoringServiceProtocol {
     }
     
     private func log(for category: LogCategory, _ message: String) async {
-        await loggingService?.log(for: category, message)
+        await loggingService?.log(for: category, level: .default, message)
     }
     
     func reportError(_ error: any Swift.Error) async {

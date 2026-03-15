@@ -34,6 +34,7 @@ struct MonitoringServiceTests {
         }
         
         #expect(loggingService.log_invocationCount == 1)
+        #expect(loggingService.log_levels == [.default])
         #expect(loggingService.log_messages == [message])
         if let customCategoryName {
             #expect(loggingService.log_categories == [.custom(customCategoryName)])

@@ -79,6 +79,18 @@ import Testing
         #expect(dsTimer == nil)
     }
     
+    @Test func stopWithoutStarting() {
+        let timer = DispatchTimer()
+        weak let dsTimer = timer.timer
+        
+        #expect(dsTimer != nil)
+        #expect(timer.state == .suspended)
+        
+        timer.stop()
+        #expect(dsTimer != nil)
+        #expect(timer.state == .suspended)
+    }
+    
     @Test func redundantStart() { }
     @Test func redundantStop() { }
     @Test func stopFromHandler() { }

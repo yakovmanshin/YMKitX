@@ -35,6 +35,7 @@ public class DispatchTimer {
     }
     
     deinit {
+        stop()
         timer.cancel()
         timer.resume()
         state = .canceled

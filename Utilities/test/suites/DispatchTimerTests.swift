@@ -26,7 +26,21 @@ import Testing
         #expect(dsTimer == nil)
     }
     
-    @Test func deinitWhileRunning() { }
+    @Test func deinitWhileRunning() {
+        var timer: DispatchTimer? = DispatchTimer()
+        weak let dsTimer = timer?.timer
+        
+        #expect(dsTimer != nil)
+        #expect(timer?.state == .suspended)
+        
+        timer?.start(deadline: .now() + 1) { }
+        #expect(dsTimer != nil)
+        #expect(timer?.state == .running)
+        
+        timer = nil
+        #expect(dsTimer == nil)
+    }
+    
     @Test func deinitWhileStopped() { }
     @Test func deinitWhileCanceled() { }
     @Test func redundantStart() { }

@@ -313,5 +313,30 @@ import Testing
     }
     
     @Test func largeLeeway() { }
-    @Test func concurrency() { }
+    
+    @Test func concurrency() async throws {
+        let timer = DispatchTimer()
+        #expect(timer.state == .suspended)
+        
+        (1...100)
+            .map { DispatchQueue(label: "TEST_DispatchQueue_\($0)") }
+            .forEach { queue in
+                queue.async {
+                    switch (1...3).randomElement()! {
+                    case 1:
+                        timer.start(deadline: .now(), repeating: .milliseconds(1), leeway: .microseconds(10)) { }
+                    case 2:
+                        timer.start(wallDeadline: .now(), repeating: .milliseconds(1), leeway: .microseconds(10)) { }
+                    default:
+                        timer.stop()
+                    }
+                }
+            }
+        
+        try await Task.sleep(nanoseconds: 10 * NSEC_PER_MSEC)
+        
+        timer.stop()
+        #expect(timer.state == .suspended)
+    }
+    
 }

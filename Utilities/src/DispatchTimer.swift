@@ -15,11 +15,13 @@ public class DispatchTimer {
     
     public var wrappedValue: DispatchTimer { self }
     
+    private let queue: DispatchQueue
     let timer: any DispatchSourceTimer
     private(set) var state = State.suspended
     
     public init(queue: DispatchQueue? = nil, isStrict: Bool = false) {
         timer = DispatchSource.makeTimerSource(flags: isStrict ? .strict : [], queue: queue)
+        self.queue = DispatchQueue(label: "YMKitX.DispatchTimer.\(UInt.random(in: (.min)...(.max)))")
     }
     
     deinit {
@@ -35,8 +37,17 @@ public class DispatchTimer {
         leeway: DispatchTimeInterval = .never,
         handler: @escaping () -> Void
     ) {
+        queue.sync { _start(deadline: deadline, repeating: interval, leeway: leeway, handler: handler) }
+    }
+    
+    private func _start(
+        deadline: DispatchTime,
+        repeating interval: DispatchTimeInterval = .never,
+        leeway: DispatchTimeInterval = .never,
+        handler: @escaping () -> Void
+    ) {
         guard state != .canceled, Self.isValidInterval(interval) else { return }
-        if state == .running { stop() }
+        if state == .running { _stop() }
         
         timer.schedule(deadline: deadline, repeating: interval, leeway: leeway)
         timer.setEventHandler(handler: handler)
@@ -50,8 +61,17 @@ public class DispatchTimer {
         leeway: DispatchTimeInterval = .never,
         handler: @escaping () -> Void
     ) {
+        queue.sync { _start(wallDeadline: wallDeadline, repeating: interval, leeway: leeway, handler: handler) }
+    }
+    
+    private func _start(
+        wallDeadline: DispatchWallTime,
+        repeating interval: DispatchTimeInterval = .never,
+        leeway: DispatchTimeInterval = .never,
+        handler: @escaping () -> Void
+    ) {
         guard state != .canceled, Self.isValidInterval(interval) else { return }
-        if state == .running { stop() }
+        if state == .running { _stop() }
         
         timer.schedule(wallDeadline: wallDeadline, repeating: interval, leeway: leeway)
         timer.setEventHandler(handler: handler)
@@ -79,6 +99,10 @@ public class DispatchTimer {
     }
     
     public func stop() {
+        queue.sync { _stop() }
+    }
+    
+    private func _stop() {
         guard state == .running else { return }
         timer.suspend()
         state = .suspended

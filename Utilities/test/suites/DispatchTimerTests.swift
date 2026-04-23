@@ -312,8 +312,6 @@ import Testing
         #expect(DispatchTimer.isValidInterval(interval) == expectedResult)
     }
     
-    @Test func largeLeeway() { }
-    
     @Test func concurrency() async throws {
         let timer = DispatchTimer()
         #expect(timer.state == .suspended)

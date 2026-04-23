@@ -8,6 +8,8 @@
 
 import Dispatch
 
+// MARK: - Timer
+
 @propertyWrapper
 public class DispatchTimer {
     
@@ -75,6 +77,8 @@ public class DispatchTimer {
     }
     
 }
+
+// MARK: - State
 
 extension DispatchTimer {
     

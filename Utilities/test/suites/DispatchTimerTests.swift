@@ -12,8 +12,27 @@ import Dispatch
 import Testing
 
 @Suite struct DispatchTimerTests {
-    @Test func initWithDefaultArguments() { }
-    @Test func initWithCustomArguments() { }
+    
+    @Test func initWithDefaultArguments() {
+        let timer = DispatchTimer()
+        #expect(timer.state == .suspended)
+    }
+    
+    @Test func initWithCustomArguments() {
+        let queue = DispatchQueue(label: "TEST_DispatchTimer")
+        let timer = DispatchTimer(queue: queue, isStrict: true)
+        #expect(timer.state == .suspended)
+    }
+    
+    @Test func initAsPropertyWrapperWithDefaultArguments() {
+        @DispatchTimer var timer
+        #expect(timer.state == .suspended)
+    }
+    
+    @Test func initAsPropertyWrapperWithCustomArguments() {
+        @DispatchTimer(queue: .main, isStrict: true) var timer
+        #expect(timer.state == .suspended)
+    }
     
     @Test func deinitWithoutStarting() {
         var timer: DispatchTimer? = DispatchTimer()

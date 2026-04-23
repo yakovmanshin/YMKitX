@@ -195,6 +195,21 @@ import Testing
         #expect(handlerExecuted == true)
     }
     
+    @Test func smallInterval() async throws {
+        let timer = DispatchTimer()
+        #expect(timer.state == .suspended)
+        
+        var handlerCounter = 0
+        timer.start(deadline: .now(), repeating: .milliseconds(1)) {
+            handlerCounter += 1
+        }
+        #expect(timer.state == .running)
+        
+        try await Task.sleep(nanoseconds: 10 * NSEC_PER_MSEC)
+        
+        #expect(handlerCounter == 11)
+    }
+    
     @Test func zeroInterval() { }
     @Test func negativeInterval() { }
     @Test func largeLeeway() { }

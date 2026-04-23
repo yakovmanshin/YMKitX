@@ -28,6 +28,7 @@ public class DispatchTimer {
         queue.sync { _deinit() }
     }
     
+    @inline(__always)
     private func _deinit() {
         _stop()
         timer.cancel()
@@ -44,6 +45,7 @@ public class DispatchTimer {
         queue.sync { _start(deadline: deadline, repeating: interval, leeway: leeway, handler: handler) }
     }
     
+    @inline(__always)
     private func _start(
         deadline: DispatchTime,
         repeating interval: DispatchTimeInterval = .never,
@@ -68,6 +70,7 @@ public class DispatchTimer {
         queue.sync { _start(wallDeadline: wallDeadline, repeating: interval, leeway: leeway, handler: handler) }
     }
     
+    @inline(__always)
     private func _start(
         wallDeadline: DispatchWallTime,
         repeating interval: DispatchTimeInterval = .never,
@@ -83,6 +86,7 @@ public class DispatchTimer {
         state = .running
     }
     
+    @inlinable
     static func isValidInterval(_ interval: DispatchTimeInterval) -> Bool {
         switch interval {
         case .seconds(let value), .milliseconds(let value), .microseconds(let value), .nanoseconds(let value):
@@ -106,6 +110,7 @@ public class DispatchTimer {
         queue.sync { _stop() }
     }
     
+    @inline(__always)
     private func _stop() {
         guard state == .running else { return }
         timer.suspend()

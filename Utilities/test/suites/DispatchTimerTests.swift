@@ -190,7 +190,22 @@ import Testing
     
     @Test func deadlineTime() { }
     @Test func deadlineWallTime() { }
-    @Test func pastDeadline() { }
+    
+    @Test func pastDeadline() async throws {
+        let timer = DispatchTimer()
+        #expect(timer.state == .suspended)
+        
+        var handlerExecuted = false
+        timer.start(deadline: .now() - 1) {
+            handlerExecuted = true
+        }
+        #expect(timer.state == .running)
+        
+        try await Task.sleep(nanoseconds: 1 * NSEC_PER_MSEC)
+        
+        #expect(handlerExecuted == true)
+    }
+    
     @Test func zeroInterval() { }
     @Test func negativeInterval() { }
     @Test func largeLeeway() { }

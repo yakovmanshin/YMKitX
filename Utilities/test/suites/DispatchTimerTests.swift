@@ -41,7 +41,25 @@ import Testing
         #expect(dsTimer == nil)
     }
     
-    @Test func deinitWhileStopped() { }
+    @Test func deinitWhileStopped() {
+        var timer: DispatchTimer? = DispatchTimer()
+        weak let dsTimer = timer?.timer
+        
+        #expect(dsTimer != nil)
+        #expect(timer?.state == .suspended)
+        
+        timer?.start(deadline: .now() + 1) { }
+        #expect(dsTimer != nil)
+        #expect(timer?.state == .running)
+        
+        timer?.stop()
+        #expect(dsTimer != nil)
+        #expect(timer?.state == .suspended)
+        
+        timer = nil
+        #expect(dsTimer == nil)
+    }
+    
     @Test func deinitWhileCanceled() { }
     @Test func redundantStart() { }
     @Test func redundantStop() { }

@@ -93,6 +93,7 @@ import Testing
         
         dsTimer?.cancel()
         #expect(dsTimer != nil)
+        #expect(dsTimer?.isCancelled == true)
         
         timer = nil
         #expect(dsTimer == nil)

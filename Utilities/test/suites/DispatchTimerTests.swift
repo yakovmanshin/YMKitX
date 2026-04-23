@@ -227,6 +227,7 @@ import Testing
         try await Task.sleep(nanoseconds: 1 * NSEC_PER_MSEC)
         
         #expect(handlerExecuted)
+        #expect(timer.state == .running)
     }
     
     @Test func pastWallDeadline() async throws {
@@ -242,6 +243,7 @@ import Testing
         try await Task.sleep(nanoseconds: 1 * NSEC_PER_MSEC)
         
         #expect(handlerExecuted)
+        #expect(timer.state == .running)
     }
     
     @Test func smallInterval() async throws {
@@ -257,6 +259,7 @@ import Testing
         try await Task.sleep(nanoseconds: 10 * NSEC_PER_MSEC)
         
         #expect(handlerCounter >= 10)
+        #expect(timer.state == .running)
     }
     
     @Test func zeroInterval() async throws {
@@ -272,6 +275,7 @@ import Testing
         try await Task.sleep(nanoseconds: 10 * NSEC_PER_MSEC)
         
         #expect(handlerCounter > 1000)
+        #expect(timer.state == .running)
     }
     
     @Test func negativeInterval() async throws {
@@ -286,8 +290,8 @@ import Testing
         
         try await Task.sleep(nanoseconds: 1 * NSEC_PER_MSEC)
         
-        #expect(timer.state == .suspended)
         #expect(!handlerExecuted)
+        #expect(timer.state == .suspended)
     }
     
     @Test(arguments: [

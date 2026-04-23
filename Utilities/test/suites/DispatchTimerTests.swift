@@ -198,7 +198,21 @@ import Testing
         #expect(timer.state == .running)
     }
     
-    @Test func deadlineWallTime() { }
+    @Test func deadlineWallTime() async throws {
+        let timer = DispatchTimer()
+        #expect(timer.state == .suspended)
+        
+        var handlerExecuted = false
+        timer.start(wallDeadline: .now() + 0.01) {
+            handlerExecuted = true
+        }
+        #expect(timer.state == .running)
+        
+        try await Task.sleep(nanoseconds: 50 * NSEC_PER_MSEC)
+        
+        #expect(handlerExecuted)
+        #expect(timer.state == .running)
+    }
     
     @Test func pastDeadline() async throws {
         let timer = DispatchTimer()

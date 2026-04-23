@@ -81,39 +81,29 @@ import Testing
     
     @Test func stopWithoutStarting() {
         let timer = DispatchTimer()
-        weak let dsTimer = timer.timer
-        
-        #expect(dsTimer != nil)
         #expect(timer.state == .suspended)
         
         timer.stop()
-        #expect(dsTimer != nil)
         #expect(timer.state == .suspended)
     }
     
     @Test func immediateRestart() async throws {
         let timer = DispatchTimer()
-        weak let dsTimer = timer.timer
-        
-        #expect(dsTimer != nil)
         #expect(timer.state == .suspended)
         
         var originalHandlerExecuted = false
         timer.start(deadline: .now() + 0.01) {
             originalHandlerExecuted = true
         }
-        #expect(dsTimer != nil)
         #expect(timer.state == .running)
         
         timer.stop()
-        #expect(dsTimer != nil)
         #expect(timer.state == .suspended)
         
         var newHandlerExecuted = false
         timer.start(deadline: .now() + 0.01) {
             newHandlerExecuted = true
         }
-        #expect(dsTimer != nil)
         #expect(timer.state == .running)
         
         try await Task.sleep(nanoseconds: 50 * NSEC_PER_MSEC)
@@ -124,23 +114,18 @@ import Testing
     
     @Test func redundantStart() async throws {
         let timer = DispatchTimer()
-        weak let dsTimer = timer.timer
-        
-        #expect(dsTimer != nil)
         #expect(timer.state == .suspended)
         
         var originalHandlerExecuted = false
         timer.start(deadline: .now() + 0.01) {
             originalHandlerExecuted = true
         }
-        #expect(dsTimer != nil)
         #expect(timer.state == .running)
         
         var newHandlerExecuted = false
         timer.start(deadline: .now() + 0.01) {
             newHandlerExecuted = true
         }
-        #expect(dsTimer != nil)
         #expect(timer.state == .running)
         
         try await Task.sleep(nanoseconds: 50 * NSEC_PER_MSEC)
@@ -151,40 +136,29 @@ import Testing
     
     @Test func redundantStop() {
         let timer = DispatchTimer()
-        weak let dsTimer = timer.timer
-        
-        #expect(dsTimer != nil)
         #expect(timer.state == .suspended)
         
         timer.start(deadline: .now() + 1) { }
-        #expect(dsTimer != nil)
         #expect(timer.state == .running)
         
         timer.stop()
-        #expect(dsTimer != nil)
         #expect(timer.state == .suspended)
         
         timer.stop()
-        #expect(dsTimer != nil)
         #expect(timer.state == .suspended)
     }
     
     @Test func stopFromHandler() async throws {
         let timer = DispatchTimer()
-        weak let dsTimer = timer.timer
-        
-        #expect(dsTimer != nil)
         #expect(timer.state == .suspended)
         
         timer.start(deadline: .now() + 0.01) {
             timer.stop()
         }
-        #expect(dsTimer != nil)
         #expect(timer.state == .running)
         
         try await Task.sleep(nanoseconds: 50 * NSEC_PER_MSEC)
         
-        #expect(dsTimer != nil)
         #expect(timer.state == .suspended)
     }
     

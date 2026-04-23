@@ -25,7 +25,11 @@ public class DispatchTimer {
     }
     
     deinit {
-        stop()
+        queue.sync { _deinit() }
+    }
+    
+    private func _deinit() {
+        _stop()
         timer.cancel()
         timer.resume()
         state = .canceled

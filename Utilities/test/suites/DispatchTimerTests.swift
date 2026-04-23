@@ -92,7 +92,27 @@ import Testing
     }
     
     @Test func redundantStart() { }
-    @Test func redundantStop() { }
+    
+    @Test func redundantStop() {
+        let timer = DispatchTimer()
+        weak let dsTimer = timer.timer
+        
+        #expect(dsTimer != nil)
+        #expect(timer.state == .suspended)
+        
+        timer.start(deadline: .now() + 1) { }
+        #expect(dsTimer != nil)
+        #expect(timer.state == .running)
+        
+        timer.stop()
+        #expect(dsTimer != nil)
+        #expect(timer.state == .suspended)
+        
+        timer.stop()
+        #expect(dsTimer != nil)
+        #expect(timer.state == .suspended)
+    }
+    
     @Test func stopFromHandler() { }
     @Test func immediateRestart() { }
     @Test func deadlineTime() { }

@@ -60,7 +60,25 @@ import Testing
         #expect(dsTimer == nil)
     }
     
-    @Test func deinitWhileCanceled() { }
+    // This scenario is not possible using the public API.
+    @Test func deinitWhileCanceled() {
+        var timer: DispatchTimer? = DispatchTimer()
+        weak let dsTimer = timer?.timer
+        
+        #expect(dsTimer != nil)
+        #expect(timer?.state == .suspended)
+        
+        timer?.start(deadline: .now() + 1) { }
+        #expect(dsTimer != nil)
+        #expect(timer?.state == .running)
+        
+        dsTimer?.cancel()
+        #expect(dsTimer != nil)
+        
+        timer = nil
+        #expect(dsTimer == nil)
+    }
+    
     @Test func redundantStart() { }
     @Test func redundantStop() { }
     @Test func stopFromHandler() { }

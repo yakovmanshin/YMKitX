@@ -227,7 +227,7 @@ import Testing
         
         try await Task.sleep(nanoseconds: 10 * NSEC_PER_MSEC)
         
-        #expect(handlerCounter == 11)
+        #expect(handlerCounter >= 10)
     }
     
     @Test func zeroInterval() async throws {

@@ -113,7 +113,25 @@ import Testing
         #expect(timer.state == .suspended)
     }
     
-    @Test func stopFromHandler() { }
+    @Test func stopFromHandler() async throws {
+        let timer = DispatchTimer()
+        weak let dsTimer = timer.timer
+        
+        #expect(dsTimer != nil)
+        #expect(timer.state == .suspended)
+        
+        timer.start(deadline: .now() + 0.01) {
+            timer.stop()
+        }
+        #expect(dsTimer != nil)
+        #expect(timer.state == .running)
+        
+        try await Task.sleep(nanoseconds: 50 * NSEC_PER_MSEC)
+        
+        #expect(dsTimer != nil)
+        #expect(timer.state == .suspended)
+    }
+    
     @Test func immediateRestart() { }
     @Test func deadlineTime() { }
     @Test func deadlineWallTime() { }

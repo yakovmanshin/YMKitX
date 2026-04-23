@@ -20,6 +20,10 @@ private func darwinProducts() -> [Product] {
             targets: ["YMMisc"],
         ),
         .library(
+            name: "YMUtilities",
+            targets: ["YMUtilities"],
+        ),
+        .library(
             name: "YMValidationKit",
             targets: ["YMAppValidation"],
         ),

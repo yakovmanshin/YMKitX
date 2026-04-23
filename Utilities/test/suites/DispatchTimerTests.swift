@@ -36,7 +36,7 @@ import Testing
     
     @Test func deinitWithoutStarting() {
         var timer: DispatchTimer? = DispatchTimer()
-        weak let dsTimer = timer?.timer
+        weak var dsTimer = timer?.timer
         
         #expect(dsTimer != nil)
         #expect(timer?.state == .suspended)
@@ -47,7 +47,7 @@ import Testing
     
     @Test func deinitWhileRunning() {
         var timer: DispatchTimer? = DispatchTimer()
-        weak let dsTimer = timer?.timer
+        weak var dsTimer = timer?.timer
         
         #expect(dsTimer != nil)
         #expect(timer?.state == .suspended)
@@ -62,7 +62,7 @@ import Testing
     
     @Test func deinitWhileStopped() {
         var timer: DispatchTimer? = DispatchTimer()
-        weak let dsTimer = timer?.timer
+        weak var dsTimer = timer?.timer
         
         #expect(dsTimer != nil)
         #expect(timer?.state == .suspended)
@@ -82,7 +82,7 @@ import Testing
     // This scenario is not possible using the public API.
     @Test func deinitWhileCanceled() {
         var timer: DispatchTimer? = DispatchTimer()
-        weak let dsTimer = timer?.timer
+        weak var dsTimer = timer?.timer
         
         #expect(dsTimer != nil)
         #expect(timer?.state == .suspended)

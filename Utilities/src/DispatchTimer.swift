@@ -9,18 +9,18 @@
 import Dispatch
 
 @propertyWrapper
-class DispatchTimer {
+public class DispatchTimer {
     
-    var wrappedValue: DispatchTimer { self }
-    
-    @available(*, unavailable, message: "Evolution")
-    var projectedValue: any DispatchSourceTimer { timer }
-    
-    private let timer: any DispatchSourceTimer
-    private var state = State.suspended
+    public var wrappedValue: DispatchTimer { self }
     
     @available(*, unavailable, message: "Evolution")
-    convenience init(queueLabel: String? = nil) {
+    public var projectedValue: any DispatchSourceTimer { timer }
+    
+    let timer: any DispatchSourceTimer
+    private(set) var state = State.suspended
+    
+    @available(*, unavailable, message: "Evolution")
+    public convenience init(queueLabel: String? = nil) {
         let queue: DispatchQueue? = if let queueLabel {
             DispatchQueue(label: queueLabel)
         } else { nil }
@@ -28,7 +28,7 @@ class DispatchTimer {
         self.init(queue: queue)
     }
     
-    init(queue: DispatchQueue? = nil, isStrict: Bool = false) {
+    public init(queue: DispatchQueue? = nil, isStrict: Bool = false) {
         timer = DispatchSource.makeTimerSource(flags: isStrict ? .strict : [], queue: queue)
     }
     
@@ -38,7 +38,7 @@ class DispatchTimer {
         state = .canceled
     }
     
-    func start(
+    public func start(
         deadline: DispatchTime,
         repeating interval: DispatchTimeInterval = .never,
         leeway: DispatchTimeInterval = .never,
@@ -53,7 +53,7 @@ class DispatchTimer {
         state = .running
     }
     
-    func start(
+    public func start(
         wallDeadline: DispatchWallTime,
         repeating interval: DispatchTimeInterval = .never,
         leeway: DispatchTimeInterval = .never,
@@ -68,7 +68,7 @@ class DispatchTimer {
         state = .running
     }
     
-    func stop() {
+    public func stop() {
         guard state == .running else { return }
         timer.suspend()
         state = .suspended

@@ -225,7 +225,22 @@ import Testing
         #expect(handlerCounter > 1000)
     }
     
-    @Test func negativeInterval() { }
+    @Test func negativeInterval() async throws {
+        let timer = DispatchTimer()
+        #expect(timer.state == .suspended)
+        
+        var handlerExecuted = false
+        timer.start(deadline: .now(), repeating: .seconds(-1)) {
+            handlerExecuted = true
+        }
+        #expect(timer.state == .suspended)
+        
+        try await Task.sleep(nanoseconds: 1 * NSEC_PER_MSEC)
+        
+        #expect(timer.state == .suspended)
+        #expect(!handlerExecuted)
+    }
+    
     @Test func largeLeeway() { }
     @Test func concurrency() { }
 }

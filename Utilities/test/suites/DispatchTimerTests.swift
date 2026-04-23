@@ -241,6 +241,24 @@ import Testing
         #expect(!handlerExecuted)
     }
     
+    @Test(arguments: [
+        (.never, true),
+        (.seconds(30), true),
+        (.seconds(0), true),
+        (.seconds(-600), false),
+        (.milliseconds(100), true),
+        (.milliseconds(0), true),
+        (.milliseconds(-100), false),
+        (.microseconds(10), true),
+        (.microseconds(0), true),
+        (.microseconds(-10), false),
+        (.nanoseconds(1), true),
+        (.nanoseconds(0), true),
+        (.nanoseconds(-1), false),
+    ] as [(DispatchTimeInterval, Bool)]) func isValidInterval(interval: DispatchTimeInterval, expectedResult: Bool) {
+        #expect(DispatchTimer.isValidInterval(interval) == expectedResult)
+    }
+    
     @Test func largeLeeway() { }
     @Test func concurrency() { }
 }

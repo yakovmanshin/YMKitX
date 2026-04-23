@@ -47,7 +47,7 @@ public class DispatchTimer {
         leeway: DispatchTimeInterval = .never,
         handler: @escaping () -> Void
     ) {
-        guard state != .canceled else { return }
+        guard state != .canceled, Self.isValidInterval(interval) else { return }
         if state == .running { stop() }
         
         timer.schedule(deadline: deadline, repeating: interval, leeway: leeway)
@@ -62,13 +62,32 @@ public class DispatchTimer {
         leeway: DispatchTimeInterval = .never,
         handler: @escaping () -> Void
     ) {
-        guard state != .canceled else { return }
+        guard state != .canceled, Self.isValidInterval(interval) else { return }
         if state == .running { stop() }
         
         timer.schedule(wallDeadline: wallDeadline, repeating: interval, leeway: leeway)
         timer.setEventHandler(handler: handler)
         timer.resume()
         state = .running
+    }
+    
+    static func isValidInterval(_ interval: DispatchTimeInterval) -> Bool {
+        switch interval {
+        case .seconds(let value), .milliseconds(let value), .microseconds(let value), .nanoseconds(let value):
+            if value > 0 {
+                return true
+            } else if value == 0 {
+                print("[YMKitX / DispatchTimer] Using zero as the repeat interval may cause unexpected results; the timer will start anyway")
+                return true
+            } else {
+                print("[YMKitX / DispatchTimer] Using a negative repeat interval causes a runtime exception; the timer will not start")
+                return false
+            }
+        case .never: return true
+        @unknown default:
+            print("[YMKitX / DispatchTimer] Unknown DispatchTimeInterval value; you may need to update YMKitX")
+            return true
+        }
     }
     
     public func stop() {

@@ -122,7 +122,32 @@ import Testing
         #expect(newHandlerExecuted == true)
     }
     
-    @Test func redundantStart() { }
+    @Test func redundantStart() async throws {
+        let timer = DispatchTimer()
+        weak let dsTimer = timer.timer
+        
+        #expect(dsTimer != nil)
+        #expect(timer.state == .suspended)
+        
+        var originalHandlerExecuted = false
+        timer.start(deadline: .now() + 0.01) {
+            originalHandlerExecuted = true
+        }
+        #expect(dsTimer != nil)
+        #expect(timer.state == .running)
+        
+        var newHandlerExecuted = false
+        timer.start(deadline: .now() + 0.01) {
+            newHandlerExecuted = true
+        }
+        #expect(dsTimer != nil)
+        #expect(timer.state == .running)
+        
+        try await Task.sleep(nanoseconds: 50 * NSEC_PER_MSEC)
+        
+        #expect(originalHandlerExecuted == false)
+        #expect(newHandlerExecuted == true)
+    }
     
     @Test func redundantStop() {
         let timer = DispatchTimer()

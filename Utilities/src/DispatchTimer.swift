@@ -15,20 +15,8 @@ public class DispatchTimer {
     
     public var wrappedValue: DispatchTimer { self }
     
-    @available(*, unavailable, message: "Evolution")
-    public var projectedValue: any DispatchSourceTimer { timer }
-    
     let timer: any DispatchSourceTimer
     private(set) var state = State.suspended
-    
-    @available(*, unavailable, message: "Evolution")
-    public convenience init(queueLabel: String? = nil) {
-        let queue: DispatchQueue? = if let queueLabel {
-            DispatchQueue(label: queueLabel)
-        } else { nil }
-        
-        self.init(queue: queue)
-    }
     
     public init(queue: DispatchQueue? = nil, isStrict: Bool = false) {
         timer = DispatchSource.makeTimerSource(flags: isStrict ? .strict : [], queue: queue)

@@ -108,8 +108,8 @@ import Testing
         
         try await Task.sleep(nanoseconds: 50 * NSEC_PER_MSEC)
         
-        #expect(originalHandlerExecuted == false)
-        #expect(newHandlerExecuted == true)
+        #expect(!originalHandlerExecuted)
+        #expect(newHandlerExecuted)
     }
     
     @Test func redundantStart() async throws {
@@ -130,8 +130,8 @@ import Testing
         
         try await Task.sleep(nanoseconds: 50 * NSEC_PER_MSEC)
         
-        #expect(originalHandlerExecuted == false)
-        #expect(newHandlerExecuted == true)
+        #expect(!originalHandlerExecuted)
+        #expect(newHandlerExecuted)
     }
     
     @Test func redundantStop() {
@@ -177,7 +177,7 @@ import Testing
         
         try await Task.sleep(nanoseconds: 1 * NSEC_PER_MSEC)
         
-        #expect(handlerExecuted == true)
+        #expect(handlerExecuted)
     }
     
     @Test func pastWallDeadline() async throws {
@@ -192,7 +192,7 @@ import Testing
         
         try await Task.sleep(nanoseconds: 1 * NSEC_PER_MSEC)
         
-        #expect(handlerExecuted == true)
+        #expect(handlerExecuted)
     }
     
     @Test func smallInterval() async throws {

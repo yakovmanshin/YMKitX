@@ -8,12 +8,24 @@
 
 @testable import YMUtilities
 
+import Dispatch
 import Testing
 
 @Suite struct DispatchTimerTests {
     @Test func initWithDefaultArguments() { }
     @Test func initWithCustomArguments() { }
-    @Test func deinitWithoutStarting() { }
+    
+    @Test func deinitWithoutStarting() {
+        var timer: DispatchTimer? = DispatchTimer()
+        weak let dsTimer = timer?.timer
+        
+        #expect(dsTimer != nil)
+        #expect(timer?.state == .suspended)
+        
+        timer = nil
+        #expect(dsTimer == nil)
+    }
+    
     @Test func deinitWhileRunning() { }
     @Test func deinitWhileStopped() { }
     @Test func deinitWhileCanceled() { }

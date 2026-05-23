@@ -9,6 +9,9 @@
 /// The object that validates the app.
 public protocol AppValidatorProtocol: Sendable {
     
+    /// Performs app validation and returns the final report.
+    func performValidation() async -> AppValidatorReport
+    
     /// Validates the app and returns the report.
     ///
     /// - Parameter allowCache: *Required.* Indicates whether the validator is allowed to return cached reports.

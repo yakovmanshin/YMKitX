@@ -26,6 +26,11 @@ final actor AppValidator<ARV: AppReceiptValidatorProtocol> {
 
 extension AppValidator: AppValidatorProtocol {
     
+    func performValidation() async -> AppValidatorReport {
+        // TODO: Implement
+        fatalError("Not implemented")
+    }
+    
     func validateApp(allowCache: Bool, allowUI: Bool) async -> AppValidatorReport {
         if allowCache, let cachedReport {
             return cachedReport

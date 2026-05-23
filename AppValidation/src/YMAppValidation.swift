@@ -16,3 +16,11 @@
 public func makeAppValidator(appIdentity: AppIdentity? = nil) -> some AppValidatorProtocol {
     AppValidator(appReceiptValidator: makeAppReceiptValidator(appIdentity: appIdentity))
 }
+
+/// Initializes and returns an opaque-type app validator.
+///
+/// - Parameter components: *Required.* An array of validation components.
+public func makeAppValidator(components: [any ValidationComponent]) -> some AppValidatorProtocol {
+    // TODO: Refactor
+    AppValidator(appReceiptValidator: makeAppReceiptValidator())
+}

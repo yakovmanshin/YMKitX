@@ -18,12 +18,14 @@ jobs:
     runs-on: ${{ matrix.OS }}
     strategy:
       matrix:
-        XCODE_VERSION: ["16.4", "26.3"]
+        XCODE_VERSION: ["16.4", "26.3", "26.6"]
         OS: [macos-15, macos-26]
         DESTINATION_TYPE: [macOS, iOS_Simulator]
         exclude:
           - OS: macos-26
             XCODE_VERSION: "16.4"
+          - OS: macos-15
+            XCODE_VERSION: "26.6"
         include:
           - DESTINATION_TYPE: macOS
             DESTINATION: "platform=macOS"
@@ -33,6 +35,9 @@ jobs:
           - DESTINATION_TYPE: iOS_Simulator
             XCODE_VERSION: "26.3"
             DESTINATION: "platform=iOS Simulator,name=iPhone 17 Pro Max,OS=26.2"
+          - DESTINATION_TYPE: iOS_Simulator
+            XCODE_VERSION: "26.6"
+            DESTINATION: "platform=iOS Simulator,name=iPhone 17 Pro Max,OS=26.5"
     steps:
       - name: Check Out Repository
         uses: actions/checkout@v6

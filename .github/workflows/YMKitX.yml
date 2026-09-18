@@ -70,8 +70,6 @@ jobs:
             XCODE_VERSION: ""
           - OS: ubuntu-26.04
             XCODE_VERSION: ""
-          - OS: ubuntu-26.04-arm64
-            XCODE_VERSION: ""
     steps:
       - name: Check Out Repository
         uses: actions/checkout@v6

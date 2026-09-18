@@ -11,6 +11,10 @@
 import Dispatch
 import Testing
 
+#if os(Linux)
+fileprivate let NSEC_PER_MSEC: UInt64 = 1_000_000
+#endif
+
 @Suite struct DispatchTimerTests {
     
     @Test func initWithDefaultArguments() {

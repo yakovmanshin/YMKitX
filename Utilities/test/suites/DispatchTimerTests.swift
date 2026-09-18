@@ -34,6 +34,8 @@ import Testing
         #expect(timer.state == .suspended)
     }
     
+    #if canImport(Darwin)
+    
     @Test func deinitWithoutStarting() {
         var timer: DispatchTimer? = DispatchTimer()
         weak let dsTimer = timer?.timer
@@ -98,6 +100,8 @@ import Testing
         timer = nil
         #expect(dsTimer == nil)
     }
+    
+    #endif
     
     @Test func stopWithoutStarting() {
         let timer = DispatchTimer()

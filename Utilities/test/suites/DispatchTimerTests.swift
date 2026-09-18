@@ -11,6 +11,10 @@
 import Dispatch
 import Testing
 
+#if os(Linux)
+fileprivate let NSEC_PER_MSEC: UInt64 = 1_000_000
+#endif
+
 @Suite struct DispatchTimerTests {
     
     @Test func initWithDefaultArguments() {
@@ -34,9 +38,11 @@ import Testing
         #expect(timer.state == .suspended)
     }
     
+    #if canImport(Darwin)
+    
     @Test func deinitWithoutStarting() {
         var timer: DispatchTimer? = DispatchTimer()
-        weak var dsTimer = timer?.timer
+        weak let dsTimer = timer?.timer
         
         #expect(dsTimer != nil)
         #expect(timer?.state == .suspended)
@@ -47,7 +53,7 @@ import Testing
     
     @Test func deinitWhileRunning() {
         var timer: DispatchTimer? = DispatchTimer()
-        weak var dsTimer = timer?.timer
+        weak let dsTimer = timer?.timer
         
         #expect(dsTimer != nil)
         #expect(timer?.state == .suspended)
@@ -62,7 +68,7 @@ import Testing
     
     @Test func deinitWhileStopped() {
         var timer: DispatchTimer? = DispatchTimer()
-        weak var dsTimer = timer?.timer
+        weak let dsTimer = timer?.timer
         
         #expect(dsTimer != nil)
         #expect(timer?.state == .suspended)
@@ -82,7 +88,7 @@ import Testing
     // This scenario is not possible using the public API.
     @Test func deinitWhileCanceled() {
         var timer: DispatchTimer? = DispatchTimer()
-        weak var dsTimer = timer?.timer
+        weak let dsTimer = timer?.timer
         
         #expect(dsTimer != nil)
         #expect(timer?.state == .suspended)
@@ -98,6 +104,8 @@ import Testing
         timer = nil
         #expect(dsTimer == nil)
     }
+    
+    #endif
     
     @Test func stopWithoutStarting() {
         let timer = DispatchTimer()

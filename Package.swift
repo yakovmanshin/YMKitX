@@ -20,10 +20,6 @@ private func darwinProducts() -> [Product] {
             targets: ["YMMisc"],
         ),
         .library(
-            name: "YMUtilities",
-            targets: ["YMUtilities"],
-        ),
-        .library(
             name: "YMValidationKit",
             targets: ["YMAppValidation"],
         ),
@@ -42,6 +38,10 @@ private func universalProducts() -> [Product] {
         .library(
             name: "YMMonitoring",
             targets: ["YMMonitoring"],
+        ),
+        .library(
+            name: "YMUtilities",
+            targets: ["YMUtilities"],
         ),
     ]
 }
@@ -78,15 +78,6 @@ private func darwinTargets() -> [Target] {
             dependencies: ["YMMisc"],
             path: "Misc/test",
         ),
-        .target(
-            name: "YMUtilities",
-            path: "Utilities/src",
-        ),
-        .testTarget(
-            name: "YMUtilitiesTests",
-            dependencies: ["YMUtilities"],
-            path: "Utilities/test",
-        ),
     ]
     #else
     []
@@ -112,6 +103,15 @@ private func universalTargets() -> [Target] {
             name: "YMMonitoringTests",
             dependencies: ["YMMonitoring"],
             path: "Monitoring/test",
+        ),
+        .target(
+            name: "YMUtilities",
+            path: "Utilities/src",
+        ),
+        .testTarget(
+            name: "YMUtilitiesTests",
+            dependencies: ["YMUtilities"],
+            path: "Utilities/test",
         ),
     ]
 }

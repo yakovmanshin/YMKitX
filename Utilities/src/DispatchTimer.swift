@@ -11,7 +11,7 @@ import Dispatch
 // MARK: - Timer
 
 @propertyWrapper
-public class DispatchTimer {
+public class DispatchTimer: @unchecked Sendable {
     
     public var wrappedValue: DispatchTimer { self }
     
